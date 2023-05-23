@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"net"
 
 	"github.com/gabrielDpadua21/fc-grpc-essentialst/internals/database"
@@ -9,6 +10,8 @@ import (
 	"github.com/gabrielDpadua21/fc-grpc-essentialst/internals/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -25,7 +28,7 @@ func main() {
 	pb.RegisterCategoryServiceServer(grpcServer, categoryService)
 	reflection.Register(grpcServer)
 
-	listener, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		panic(err)
 	}
@@ -33,4 +36,5 @@ func main() {
 	if err := grpcServer.Serve(listener); err != nil {
 		panic(err)
 	}
+	fmt.Println("Listem server in port 50051")
 }

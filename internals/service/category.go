@@ -16,7 +16,7 @@ func NewCategoryService(categoryDB database.Category) *CategoryService {
 	return &CategoryService{CategoryDB: categoryDB}
 }
 
-func (c *CategoryService) CreateCategory(ctx context.Context, input *pb.CreateCategoryRequest) (*pb.CategoryResponse, error) {
+func (c *CategoryService) CreateCategory(ctx context.Context, input *pb.CreateCategoryRequest) (*pb.Category, error) {
 	category, err := c.CategoryDB.Create(input.Name, input.Description)
 	if err != nil {
 		return nil, err
@@ -28,9 +28,24 @@ func (c *CategoryService) CreateCategory(ctx context.Context, input *pb.CreateCa
 		Description: category.Description,
 	}
 
-	categoryResponse := &pb.CategoryResponse{
-		Category: newCategory,
+	return newCategory, nil
+}
+
+func (c *CategoryService) ListCategories(ctx context.Context, input *pb.Blank) (*pb.CategoryList, error) {
+	categories, err := c.CategoryDB.FindAll()
+	if err != nil {
+		return nil, err
 	}
 
-	return categoryResponse, nil
+	var categoriesList []*pb.Category
+
+	for _, category := range categories {
+		categoriesList = append(categoriesList, &pb.Category{
+			Id:          category.ID,
+			Name:        category.Name,
+			Description: category.Description,
+		})
+	}
+
+	return &pb.CategoryList{Category: categoriesList}, nil
 }
