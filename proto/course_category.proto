@@ -32,6 +32,7 @@ service CategoryService {
 	rpc ListCategories(blank) returns (CategoryList) {}
 	rpc GetCategory(CategoryGetRequest) returns (Category) {}
 	rpc CreateCategoryStream(stream CreateCategoryRequest) returns (CategoryList) {}
+	rpc CreateCategoryStreamBidirectional(stream CreateCategoryRequest) returns (stream Category) {}
 }
 
 
